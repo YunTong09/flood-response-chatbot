@@ -1,0 +1,19 @@
+.bot i {
+  color: #475569;
+  font-size: 0.8rem;
+  display: block;
+  margin-top: 4px;
+}
+/* Reasoning explanation bubble */
+.reasoning {
+  background-color: #f1f5f9;       /* 淡灰底 */
+  color: #000000;                  /* 深灰字 */
+  border-left: 2px solid #64748b;  /* 灰藍邊條 */
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  opacity: 0.85;
+  animation: fadeIn 0.4s ease;
+}

@@ -1,0 +1,8 @@
+/* === 捲軸美化 === */
+#chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+  background-color: #2563eb;
+  border-radius: 10px;
+}

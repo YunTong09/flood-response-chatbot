@@ -1,0 +1,65 @@
+/* === 3️⃣ 輸入框固定底部 === */
+#chat-input-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #1e293b;
+  border-top: 2px solid var(--blue-main);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px; /* 與容器相同的最大寬度 */
+  box-sizing: border-box;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+}
+
+#user-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+  font-size: 0.9rem;
+  color: var(--gray-text);
+  margin-right: 4px;
+}
+
+/* === 按鈕 === */
+#send-btn {
+  border: none;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.2s ease;
+  font-size: 0.85rem;
+  color: white;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background-color: #2563eb;
+}
+
+#send-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* === 響應式設計 === */
+/* 小螢幕 (手機) */
+@media (max-width: 480px) {
+  #chat-input-area {
+    max-width: 100%;
+    left: 0;
+    transform: none;
+  }
+}
+
+/* 平板 */
+@media (min-width: 481px) and (max-width: 1024px) {
+  #chat-input-area {
+    max-width: 480px;
+  }
+}

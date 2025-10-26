@@ -1,12 +1,20 @@
-// Follow-up suggestions: render quick-reply chips after bot answers
+// 💡 suggestions.js
+// Handles follow-up quick-reply chips that appear after bot answers.
+// Compatible with the modular chatbot (main.js exports window.getBOMAlert)
+
 (function () {
+    console.log("✅ suggestions.js loaded");
+
     const chatMessages = document.getElementById("chat-messages");
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
 
-    if (!chatMessages || !userInput || !sendBtn) return;
+    if (!chatMessages || !userInput || !sendBtn) {
+        console.warn("❌ suggestions.js: chat elements not found.");
+        return;
+    }
 
-    // 🧩 定義主題對應的建議
+    // --- 1️⃣ Define topic → suggested follow-ups ---
     const followUpMap = {
         before: [
             "What should I put in my kit?",
@@ -22,12 +30,11 @@
             "Where can I get live updates?",
             "What if the power goes out?",
             "What should I do during a flood?",
-            "How do I know where is the shelter?"
+            "How do I know where is the shelter?",
         ],
         after: [
             "How to clean up safely?",
             "Where to get recovery assistance?",
-            "How to prevent mould?",
             "My home is damaged—what now?",
             "I feel anxious after the flood. Who can I talk to?",
         ],
@@ -55,32 +62,24 @@
         ],
     };
 
-    // 🧹 清除舊 chips
+    // --- 2️⃣ Helpers ---
     function clearSuggestions() {
         document.querySelectorAll(".suggestions").forEach((el) => el.remove());
     }
 
-    // 🔍 偵測主題
     function detectTopic(rawText = "") {
         const t = rawText.toLowerCase().trim();
-        console.log("🧠 detectTopic input =", t);
 
         if (!t) return "default";
-        if (t === "1" || t === "before" || t.includes("before flood"))
-            return "before";
-        if (t === "2" || t === "during" || t.includes("during flood"))
-            return "during";
+        if (t === "1" || t === "before" || t.includes("before flood")) return "before";
+        if (t === "2" || t === "during" || t.includes("during flood")) return "during";
         if (
             t === "3" ||
-            t.includes("after") ||
-            /(recover|recovery|mould|clean|clean up|damaged|damage|repair|help|support|anxious)/.test(
-                t
-            )
+            /(after|recover|recovery|mould|clean|damaged|damage|repair|help|support|anxious)/.test(t)
         )
             return "after";
         if (/(kit|prepare|pack|checklist|items)/.test(t)) return "kit";
-        if (/(alert|warning|sms|live|road closures|updates)/.test(t))
-            return "alerts";
+        if (/(alert|warning|sms|live|road closures|updates)/.test(t)) return "alerts";
         if (/(evacuate|leave|escape|stay home|safe to stay|go outside)/.test(t))
             return "evacuation";
         return "default";
@@ -88,11 +87,9 @@
 
     function getSuggestions(rawText) {
         const topic = detectTopic(rawText);
-        console.log("💡 Detected topic:", topic, "| user said:", rawText);
         return followUpMap[topic] || followUpMap.default;
     }
 
-    // 💬 渲染建議
     function renderSuggestions(items) {
         clearSuggestions();
         if (!items || !items.length) return;
@@ -108,6 +105,8 @@
             chip.addEventListener("click", () => {
                 userInput.value = label;
                 sendBtn.click();
+
+                // ✅ trigger live alert if chip says "Show live alerts"
                 if (
                     /show live alerts/i.test(label) &&
                     typeof window.getBOMAlert === "function"
@@ -122,37 +121,30 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // 💾 記錄使用者輸入
+    // --- 3️⃣ Watch for new bot messages ---
     let pendingUserText = "";
 
     sendBtn.addEventListener("click", () => {
         pendingUserText = userInput.value.trim();
-        console.log("📝 User input recorded:", pendingUserText);
         clearSuggestions();
     });
 
     userInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             pendingUserText = userInput.value.trim();
-            console.log("📝 (Enter) User input recorded:", pendingUserText);
             clearSuggestions();
         }
     });
 
-    // 👀 偵測新訊息（bot 回覆時顯示 chips）
     const observer = new MutationObserver((mutations) => {
         for (const m of mutations) {
             if (m.type !== "childList") continue;
             m.addedNodes.forEach((node) => {
                 if (!(node instanceof HTMLElement)) return;
                 if (node.classList.contains("bot")) {
-                    // ✅ 從 chatbot.js 拿最新輸入（防止被清空）
+                    // ✅ read last user input from window or fallback
                     const latestInput =
                         window.lastUserInputForSuggestion || pendingUserText;
-                    console.log(
-                        "💬 Bot message detected. last input =",
-                        latestInput
-                    );
                     renderSuggestions(getSuggestions(latestInput));
                 }
             });
@@ -160,9 +152,8 @@
     });
     observer.observe(chatMessages, { childList: true, subtree: true });
 
-    // 🟢 頁面載入時預設 chips
+    // --- 4️⃣ Show default chips on page load ---
     window.addEventListener("DOMContentLoaded", () => {
         renderSuggestions(getSuggestions(""));
-        console.log("✅ suggestion.js initialized");
     });
 })();

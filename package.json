@@ -1,0 +1,27 @@
+{
+  "name": "flood-response-chatbot",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YunTong09/flood-response-chatbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YunTong09/flood-response-chatbot/issues"
+  },
+  "homepage": "https://github.com/YunTong09/flood-response-chatbot#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}

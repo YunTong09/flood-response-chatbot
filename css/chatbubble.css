@@ -1,0 +1,43 @@
+/* === 聊天泡泡樣式 === */
+.message {
+  padding: 10px 14px;
+  border-radius: 18px;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  max-width: 85%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* 🤖 機器人訊息 */
+.bot {
+  background-color: #e0e7ff; /* 淡藍底 */
+  color: #1e293b;
+  align-self: flex-start;/* 靠左對齊 */
+  border: 1px solid #2563eb;
+  border-bottom-left-radius: 6px;
+}
+
+/* 👤 使用者訊息 */
+.user {
+  background-color: #2563eb;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+}
+
+.message .source {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: #0f172a;
+  opacity: 0.85;
+}
+
+.reasoning {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #0f172a;
+  opacity: 0.9;
+}
+
