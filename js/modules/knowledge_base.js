@@ -135,6 +135,7 @@ export const knowledgeBase = {
                 "🔦 Torch, radio, batteries, power bank, thick gloves<br>" +
                 "🧥 Spare clothes, waterproof jacket, bedding<br>" +
                 "💰 Cash, cards, and small entertainment items<br><br>" +
+                "If summer is approaching, it’s best to prepare your supplies early — it can make you feel calmer and more confident instead of panicking later.<br>" +
                 "🔗 <a href='https://www.getready.qld.gov.au/sites/default/files/2023-12/GRQ%20Emergency%20Kit%20checklist.pdf' target='_blank' rel='noopener noreferrer'>View full checklist on Get Ready Queensland</a><br><br>" +
                 "Source: Queensland Government – Get Ready Queensland Emergency Kit Checklist (2024).",
         },
