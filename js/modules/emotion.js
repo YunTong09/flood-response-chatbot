@@ -9,23 +9,7 @@ import { callGemini } from "./gemini_api.js";
  * If Gemini fails or is unavailable, fall back to rule-based detection.
  */
 export async function detectEmotion(input) {
-    /**try {
-        const prompt = `
-Detect the user's emotion based on this text.
-Respond with one word only: fear, gratitude, anger, or neutral.
-Text: "${input}"
-`;
-        const result = await callGemini(prompt);
-        const clean = result?.toLowerCase().trim();
-
-        // Validate output
-        if (["fear", "gratitude", "anger", "neutral"].includes(clean)) {
-            return clean;
-        }
-    } catch (err) {
-        console.warn("⚠️ Gemini emotion detection failed, using fallback:", err);
-    }*/
-
+  
     // --- fallback: keyword detection ---
     const t = input.toLowerCase();
     if (/scared|worried|anxious|afraid|nervous|terrified/.test(t)) return "fear";
@@ -39,19 +23,7 @@ Text: "${input}"
  * Uses Gemini to write natural empathetic responses, with a fallback to rule-based text.
  */
 export async function emotionalToneResponse(emotion) {
-    /**try {
-        // Skip if neutral
-        if (emotion === "neutral") return null;
-
-        const prompt = `
-Write a short empathetic one-sentence message for someone feeling ${emotion}.
-Style: calm, kind, and supportive.
-`;
-        const tone = await callGemini(prompt);
-        if (tone && tone.length > 0) return tone.trim();
-    } catch (err) {
-        console.warn("⚠️ Gemini empathy generation failed, using fallback:", err);
-    }*/
+    
 
     // --- fallback rule-based empathetic response ---
     switch (emotion) {

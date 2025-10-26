@@ -58,6 +58,9 @@ async function handleSend() {
             // 1. 顯示主要答案 (知識庫回覆)
             addMessage(kbReply, "bot");
 
+            // ✅ 立刻清空輸入框（最關鍵的地方！）
+            userInput.value = "";
+
             // 2. 產生並顯示 reasoning（這邊要 await 才不會出現 [object Promise]）
             const reasoning = await generateReasoning(userText, top.answer);
             addMessage(
