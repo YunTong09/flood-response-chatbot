@@ -1,0 +1,24 @@
+/* Follow-up suggestion chips */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 4px 2px;
+}
+
+.suggestion-chip {
+  background: #e2e8f0;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+.suggestion-chip:hover {
+  background: #e5e7eb;
+}
+.suggestion-chip:active {
+  transform: translateY(1px);
+}

@@ -1,0 +1,156 @@
+@import url('./theme.css');
+
+/* === 全域設定 === */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 20%, #1e293b 0%, #0f172a 90%);
+  font-family: var(--font-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === 主容器 (手機框寬度) === */
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px; /* ✅ 手機主視窗寬度 */
+  height: 100%;
+  max-height: 750px;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  position: relative;
+}
+
+/* === 1️⃣ 標題列 === */
+#chat-title {
+  background-color: var(--blue-main);
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  padding: 14px;
+  font-size: 1rem;
+  border-bottom: 2px solid #1e3a8a;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* === 2️⃣ 聊天訊息區 === */
+#chat-messages {
+  flex: 1;
+  padding: 14px 12px 70px; /* 留空間給輸入框 */
+  background-color: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+/* === 聊天泡泡樣式 === */
+.message {
+  padding: 10px 14px;
+  border-radius: 18px;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  max-width: 85%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* 🤖 機器人訊息 */
+.bot {
+  background-color: #e0e7ff; /* 淡藍底 */
+  color: #1e293b;
+  align-self: flex-start;
+  border: 1px solid #2563eb;
+  border-bottom-left-radius: 6px;
+}
+
+/* 👤 使用者訊息 */
+.user {
+  background-color: #2563eb;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+}
+
+/* === 3️⃣ 輸入框固定底部 === */
+#chat-input-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  background-color: white;
+  border-top: 2px solid var(--blue-main);
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px; /* ✅ 固定在手機框內底部 */
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+}
+
+#user-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+  font-size: 0.9rem;
+  color: var(--gray-text);
+}
+
+/* === 按鈕 === */
+#send-btn,
+#alert-btn {
+  border: none;
+  font-weight: 600;
+  padding: 9px 12px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.2s ease;
+  font-size: 0.85rem;
+  color: white;
+}
+
+#send-btn {
+  background-color: #2563eb;
+}
+#send-btn:hover {
+  background-color: #1d4ed8;
+}
+
+#alert-btn {
+  background-color: #ef4444;
+}
+#alert-btn:hover {
+  background-color: #dc2626;
+}
+
+/* === 捲軸美化 === */
+#chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+#chat-messages::-webkit-scrollbar-thumb {
+  background-color: #2563eb;
+  border-radius: 10px;
+}
+
+/* === 小螢幕調整 (iPhone 5/SE) === */
+@media (max-height: 600px) {
+  #chat-container {
+    max-height: 600px;
+  }
+  #chat-input-area {
+    padding: 8px;
+  }
+}

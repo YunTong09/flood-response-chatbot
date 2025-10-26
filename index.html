@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Brisbane Flood Safety Chatbot</title>
+
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="assets/favicon/favicon.ico"
+        />
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="assets/favicon/favicon.svg"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="assets/favicon/favicon-96x96.png"
+        />
+        <link
+            rel="apple-touch-icon"
+            href="assets/favicon/apple-touch-icon.png"
+        />
+        <link rel="manifest" href="assets/favicon/site.webmanifest" />
+
+        <link rel="stylesheet" href="css/theme.css" />
+        <link rel="stylesheet" href="css/layout.css" />
+        <link rel="stylesheet" href="css/suggestions.css" />
+    </head>
+    <body>
+        <div id="chat-container">
+            <!-- 🟦 第1部分：標題列 -->
+            <header id="chat-title">🌧 Brisbane Flood Safety Assistant</header>
+
+            <!-- 💬 第2部分：聊天訊息 -->
+            <main id="chat-messages">
+                <!-- JS 會在這裡自動加入聊天泡泡 -->
+            </main>
+
+            <!-- ⌨️ 第3部分：輸入區 -->
+            <footer id="chat-input-area">
+                <input
+                    type="text"
+                    id="user-input"
+                    placeholder="Type your message..."
+                />
+                <button id="send-btn">Send</button>
+                <button id="alert-btn">🛰 BOM Alert</button>
+            </footer>
+        </div>
+
+        <script src="js/chatbot.js"></script>
+        <script src="js/suggestions.js"></script>
+    </body>
+</html>

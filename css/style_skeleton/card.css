@@ -1,0 +1,33 @@
+@import url('./theme.css');
+
+.message {
+  margin: 8px 0;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  max-width: 80%;
+  word-break: break-word;
+  animation: fadeIn 0.3s ease;
+}
+
+.user {
+  background-color: var(--blue-main);
+  color: var(--white);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.bot {
+  background-color: var(--white);
+  border: 1.5px solid var(--blue-main);
+  color: var(--gray-text);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+/* 淡入動畫 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

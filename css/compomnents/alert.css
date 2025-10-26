@@ -1,0 +1,16 @@
+@import url('../style_skeleton/theme.css');
+
+.alert-card {
+  border: 2px solid var(--red-main);
+  background-color: #fee2e2; /* 淡紅警示底 */
+  color: #7f1d1d;
+  padding: 12px;
+  border-radius: var(--radius);
+  margin-top: 10px;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.alert-card strong {
+  color: var(--red-main);
+}
