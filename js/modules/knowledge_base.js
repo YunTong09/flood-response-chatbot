@@ -13,6 +13,28 @@ export const knowledgeBase = {
     qna: [
         {
             keywords: [
+                "evacuation",
+                "evacuation centre",
+                "shelter",
+                "cyclone shelter",
+                "where to go",
+                "evacuation information",
+                "leave",
+            ],
+            answer:
+                "🚨 <b>Evacuation Centres and Shelters</b><br><br>" +
+                "During a disaster, information about evacuations and cyclone shelters will be broadcast through official channels such as:<br>" +
+                "• Local <b>ABC radio</b> and commercial radio stations<br>" +
+                "• <b>Emergency Alert</b> phone warnings<br>" +
+                "• Local TV news<br>" +
+                "• Your <b>local council</b> website and updates<br>" +
+                "• Door-knocking by emergency services<br><br>" +
+                "If you are asked to evacuate, it means there is a <b>real danger</b>. Please follow the instructions from authorities immediately.<br><br>" +
+                "📻 <a href='https://www.qld.gov.au/community/disasters-emergencies/prepare/evacuation-centres' target='_blank' rel='noopener noreferrer'>Queensland Government – Evacuation Centres</a><br><br>" +
+                "Source: Queensland Government – Disaster and Emergency Management.",
+        },
+        {
+            keywords: [
                 "warning levels",
                 "what do warning levels mean",
                 "flood warning meaning",
@@ -100,7 +122,12 @@ export const knowledgeBase = {
                 "🔗<a href='https://plan.getready.qld.gov.au/' target='_blank' rel='noopener noreferrer'>Make a plan on Get Ready Queensland</a><br><br>",
         },
         {
-            keywords: ["kit", "emergency", "prepare"],
+            keywords: [
+                "kit",
+                "emergency kit",
+                "what to pack",
+                "what to include in kit",
+            ],
             answer: "Your emergency kit should include:\n• Water\n• Food\n• First-aid kit\n• Torch\n• Phone charger\n• Medicines\n• Pet items\n\nSource: Get Ready Queensland.",
         },
         {
@@ -108,19 +135,14 @@ export const knowledgeBase = {
                 "checklist",
                 "kit list",
                 "items",
-                "prepare list",
                 "what should i pack",
                 "what to pack",
-                "how to prepare",
-                "how many",
-                "how much",
                 "how much water",
                 "how much water do i need",
                 "many",
                 "quantity",
                 "water amount",
                 "water litres",
-                "water liters",
                 "detailed list",
             ],
             answer:
@@ -169,10 +191,18 @@ export const knowledgeBase = {
         },
         {
             keywords: [
-                "after flood",
-                "assistance",
-                "recovery",
-                "financial help",
+                "financial",
+                "money",
+                "fund",
+                "grant",
+                "compensation",
+                "apply for financial help",
+                "apply for support",
+                "apply for assistance",
+                "apply for aid",
+                "insurance",
+                "claim",
+                "recovery assistance",
                 "disaster assistance",
             ],
             answer:
@@ -313,27 +343,7 @@ export const knowledgeBase = {
                 "🔗 <a href='https://info.bom.gov.au/subscribe/' target='_blank' rel='noopener noreferrer'>Brisbane City Council – Severe Weather Alert Service</a><br><br>" +
                 "Source: Brisbane City Council.",
         },
-        {
-            keywords: [
-                "evacuation",
-                "evacuation centre",
-                "shelter",
-                "cyclone shelter",
-                "where to go",
-                "evacuation information",
-            ],
-            answer:
-                "🚨 <b>Evacuation Centres and Shelters</b><br><br>" +
-                "During a disaster, information about evacuations and cyclone shelters will be broadcast through official channels such as:<br>" +
-                "• Local <b>ABC radio</b> and commercial radio stations<br>" +
-                "• <b>Emergency Alert</b> phone warnings<br>" +
-                "• Local TV news<br>" +
-                "• Your <b>local council</b> website and updates<br>" +
-                "• Door-knocking by emergency services<br><br>" +
-                "If you are asked to evacuate, it means there is a <b>real danger</b>. Please follow the instructions from authorities immediately.<br><br>" +
-                "📻 <a href='https://www.qld.gov.au/community/disasters-emergencies/prepare/evacuation-centres' target='_blank' rel='noopener noreferrer'>Queensland Government – Evacuation Centres</a><br><br>" +
-                "Source: Queensland Government – Disaster and Emergency Management.",
-        },
+
         {
             keywords: [
                 "store kit",

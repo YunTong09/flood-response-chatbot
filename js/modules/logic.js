@@ -10,19 +10,26 @@ export function getReply(input) {
     // 🩵 During a disaster: prioritise safety and provide "during" guidance
     if (
         (/during|right now|currently/.test(text) &&
-            /(what\s+should|what\s+to\s+do|what\s+now|how\s+to|help|scared)/.test(text)) ||
-        /(flood(ing)?\s+happening|in\s+the\s+middle\s+of\s+a\s+flood|during\s+a\s+flood)/.test(text)
+            /(what\s+should|what\s+to\s+do|what\s+now|how\s+to|help|scared)/.test(
+                text
+            )) ||
+        /(flood(ing)?\s+happening|in\s+the\s+middle\s+of\s+a\s+flood|during\s+a\s+flood)/.test(
+            text
+        )
     ) {
         return (
             "Take a breath—you’re not alone. Prioritise safety:\n" +
             knowledgeBase.replies.during
         );
     }
+    
 
     // 💧 After a disaster / home damaged: provide recovery guidance
     if (
         (/after|post[-\s]?flood/.test(text) &&
-            /(what\s+should|what\s+to\s+do|what\s+now|how\s+to|clean\s*up)/.test(text)) ||
+            /(what\s+should|what\s+to\s+do|what\s+now|how\s+to|clean\s*up)/.test(
+                text
+            )) ||
         /(house|home).*(damaged|destroyed|unsafe|flooded)/.test(text)
     ) {
         return (
@@ -42,25 +49,13 @@ export function getReply(input) {
     if (text === "3" || text.includes("after"))
         return knowledgeBase.replies.after;
 
-    // 🚨 Evacuation-related questions
-    const evacuationWords = [
-        "leave", "evacuate", "escape", "run", "get out", "go out",
-        "should i leave", "should we leave", "go outside",
-        "stay home", "safe to stay"
-    ];
-
-    for (const kw of evacuationWords) {
-        const pattern = new RegExp(`\\b${kw}\\b`, "i");
-        if (pattern.test(text)) {
-            return (
-                "I’m not able to decide evacuation actions.<br><br>" +
-                "Please check the latest official warnings or updates before making any decisions.<br><br>" +
-                "🌐 <a href='https://www.bom.gov.au/qld/warnings/' target='_blank' rel='noopener noreferrer'>Bureau of Meteorology (BoM)</a><br>" +
-                "📢 <a href='https://www.brisbane.qld.gov.au/beprepared' target='_blank' rel='noopener noreferrer'>Brisbane Emergency Dashboard</a><br><br>" +
-                "If authorities issue an evacuation order, please follow their official instructions immediately.<br><br>" +
-                "If you ever feel unsafe, move to higher ground and contact emergency services (000)."
-            );
-        }
+    // ✅ Handle general preparation queries first
+    if (
+        /(prepare|get ready|how to prepare|what to do before|before flood|flood preparation|plan ahead)/i.test(
+            text
+        )
+    ) {
+        return knowledgeBase.replies.before;
     }
 
     // 💬 General Q&A matches from the knowledge base
@@ -77,12 +72,21 @@ export function getReply(input) {
         }
     }
 
+
+    // 🛑 Stop further matching for evacuation queries
+    if (
+        /(leave|evacuate|escape|go outside|stay home|safe to stay|should i leave)/i.test(
+            text
+        )
+    ) {
+        return ""; // ← return 空值可阻止繼續匹配 qna
+    }
+
     // 🧾 Default fallback if no matches
     return (
         "I can help with:\n" +
         "1️⃣ Before a flood\n" +
         "2️⃣ During a flood\n" +
-        "3️⃣ After a flood\n" +
-        "Or type 'BOM alert' to check live warnings."
+        "3️⃣ After a flood\n"
     );
 }

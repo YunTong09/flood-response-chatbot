@@ -33,10 +33,110 @@ async function handleSend() {
     const tone = await emotionalToneResponse(emotion);
     if (tone) addMessage(tone, "bot");
 
+    // 🛑 High-risk decision queries (evacuation / stay-or-leave):
+    // For these, we DO NOT use retriever. We answer with a responsibility-safe message.
+    if (
+        /(should i leave|should i leave my house|should i leave my place|do i need to leave|do we need to leave|should i evacuate|do i have to evacuate|is it safe to stay|is it safe to stay here|can i stay home|can i stay here|is it safe here|can i stay or should i go|water .* (get|gets|getting) in)/i.test(
+            userText
+        )
+    ) {
+        const safeReply =
+            "⚠️ I can’t decide evacuation actions for you, but here’s what official sources recommend:<br><br>" +
+            "🌐 <a href='https://www.bom.gov.au/qld/warnings/' target='_blank' rel='noopener noreferrer'>Bureau of Meteorology (BoM)</a><br>" +
+            "📢 <a href='https://www.brisbane.qld.gov.au/beprepared' target='_blank' rel='noopener noreferrer'>Brisbane Emergency Dashboard</a><br><br>" +
+            "If authorities issue an evacuation order, please follow their instructions immediately.<br><br>" +
+            "If you feel unsafe, move to higher ground and call emergency services (000).";
+
+        // 顯示主要回答
+        addMessage(safeReply, "bot");
+
+        // 顯示 reasoning
+        const reasoning = await generateReasoning(userText, safeReply);
+        addMessage(
+            `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
+            "bot"
+        );
+
+        userInput.value = "";
+
+        // ❗ STOP HERE.
+        // We do NOT continue to retriever.getTopK() and we do NOT call getReply() again.
+        
+        return;
+    }
+
     // step 2: main answer (rule-based safety logic)
     // First try knowledge base (local retriever)
-    //await retriever.loadKB();
+    // 🚀 Skip retriever for quick shortcuts (1️⃣ / 2️⃣ / 3️⃣)
+    if (/^\s*[123]\s*$/.test(userText)) {
+        const reply = getReply(userText);
+
+        setTimeout(async () => {
+            addMessage(reply, "bot");
+            userInput.value = "";
+            const reasoning = await generateReasoning(userText, reply);
+            addMessage(
+                `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
+                "bot"
+            );
+        }, 300);
+       
+
+        return; // stop here so retriever won't override shortcut responses
+    }
+    // 🚨 manual override: skip retriever for evacuation/shelter-related questions
+    if (
+        /\b(evacuate|shelter|evacuation|leave my house|should i leave|where can i shelter|higher place)\b/i.test(
+            userText
+        )
+    ) {
+        const reply = getReply(userText);
+
+        setTimeout(async () => {
+            addMessage(reply, "bot");
+            userInput.value = "";
+
+            const reasoning = await generateReasoning(userText, reply);
+            addMessage(
+                `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
+                "bot"
+            );
+        }, 400);
+
+        return; // ⛔ stop here so retriever doesn't run
+    }
+
+    // 💰 Financial / recovery-related questions should skip retriever
+if (/(financial|money|grant|fund|claim|insurance|apply.*help|apply.*support|apply.*assistance|compensation)/i.test(userText)) {
+    const reply =
+        "💰 <b>Financial and Recovery Assistance</b><br><br>" +
+        "If your home was damaged by the flood, you can apply for disaster recovery payments and grants from the Queensland Government.<br><br>" +
+        "👉 <a href='https://www.qld.gov.au/community/disasters-emergencies' target='_blank' rel='noopener noreferrer'>Queensland Disaster Assistance Portal</a><br><br>" +
+        "You may also contact your local council for community recovery services.<br><br>" +
+        "If you also feel stressed, you can reach Lifeline (13 11 14) for emotional support.";
+
+    addMessage(reply, "bot");
+
+    const reasoning = await generateReasoning(userText, reply);
+    addMessage(`<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`, "bot");
+
+    userInput.value = "";
+    return; // ❗STOP retriever — only use this rule-based answer
+}
     const kbHits = await retriever.getTopK(userText, 1, 0.35);
+
+    // ✅ 若使用者問的是準備階段的問題，直接用 rule-based 回覆
+    if (/(prepare|get ready|before flood)/i.test(userText)) {
+        const reply = getReply(userText);
+        addMessage(reply, "bot");
+
+        const reasoning = await generateReasoning(userText, reply);
+        addMessage(
+            `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
+            "bot"
+        );
+        return; // ← 不讓 retriever 處理
+    }
     // getTopK(query, k=1, threshold=0.35)
     // - We ask for the single best match to the user's question.
     // - We only trust it if the score >= 0.35.
