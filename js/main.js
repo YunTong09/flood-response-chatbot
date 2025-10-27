@@ -86,9 +86,8 @@ async function handleSend() {
     }
     // 🚨 manual override: skip retriever for evacuation/shelter-related questions
     if (
-        /\b(evacuate|shelter|evacuation|leave my house|should i leave|where can i shelter|higher place)\b/i.test(
-            userText
-        )
+        /(should i leave|leave my (house|home|place|apartment)|do i need to leave|do we need to leave|should i evacuate|do i have to evacuate|is it safe to (stay|remain)|can i stay (home|here)|is it safe (here|to stay)|can i stay or should i go|water .* (get|gets|getting) in)/i.test(
+        userText)
     ) {
         const reply = getReply(userText);
 
