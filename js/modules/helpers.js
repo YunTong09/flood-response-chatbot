@@ -4,11 +4,27 @@ import { callGemini } from "./gemini_api.js";
 // Shared utility functions for displaying messages and reasoning explanations
 
 export function addMessage(text, sender = "bot") {
+
+    // Get the chat container element where all messages are displayed
     const chatMessages = document.getElementById("chat-messages");
+
+    // Create a new <div> element for the message
     const msg = document.createElement("div");
+
+    // Add CSS classes for styling: one for general "message" style,
+    // and one for the sender type ("bot" or "user")
     msg.classList.add("message", sender);
+
+    // Convert the text to a string, replace newlines (\n) with <br> for line breaks,
+    // and set it as the HTML content of the message
     msg.innerHTML = String(text || "").replace(/\n/g, "<br>");
+
+    // Append the message to the chat container so it appears on the screen
     chatMessages.appendChild(msg);
+
+    // Automatically scroll the chat container to the bottom
+    // so the latest message is always visible
+    //sets the element’s scroll position (scrollTop) equal to its total scrollable height (scrollHeight).
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 

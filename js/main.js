@@ -28,7 +28,6 @@ async function handleSend() {
     window.lastUserInputForSuggestion = userText;
 
     // step 1: empathy layer
-
     const emotion = await detectEmotion(userText);
     const tone = await emotionalToneResponse(emotion);
     if (tone) addMessage(tone, "bot");
@@ -59,9 +58,7 @@ async function handleSend() {
 
         userInput.value = "";
 
-        // ❗ STOP HERE.
-        // We do NOT continue to retriever.getTopK() and we do NOT call getReply() again.
-
+        // ⛔ stop here so retriever doesn't run
         return;
     }
 
@@ -71,9 +68,12 @@ async function handleSend() {
     if (/^\s*[123]\s*$/.test(userText)) {
         const reply = getReply(userText);
 
+        // show bot reply + reasoning
         setTimeout(async () => {
             addMessage(reply, "bot");
+            // clear input box
             userInput.value = "";
+            // generate and show reasoning
             const reasoning = await generateReasoning(userText, reply);
             addMessage(
                 `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
@@ -83,27 +83,7 @@ async function handleSend() {
 
         return; // stop here so retriever won't override shortcut responses
     }
-    // 🚨 manual override: skip retriever for evacuation/shelter-related questions
-    if (
-        /(should i leave|leave my (house|home|place|apartment)|do i need to leave|do we need to leave|should i evacuate|do i have to evacuate|is it safe to (stay|remain)|can i stay (home|here)|is it safe (here|to stay)|can i stay or should i go|water .* (get|gets|getting) in)/i.test(
-            userText
-        )
-    ) {
-        const reply = getReply(userText);
-
-        setTimeout(async () => {
-            addMessage(reply, "bot");
-            userInput.value = "";
-
-            const reasoning = await generateReasoning(userText, reply);
-            addMessage(
-                `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
-                "bot"
-            );
-        }, 400);
-
-        return; // ⛔ stop here so retriever doesn't run
-    }
+   
 
     // 💰 Financial / recovery-related questions should skip retriever
     if (
@@ -129,6 +109,8 @@ async function handleSend() {
         userInput.value = "";
         return; // ❗STOP retriever — only use this rule-based answer
     }
+
+    // step 3: use retriever to find best KB answer
     const kbHits = await retriever.getTopK(userText, 1, 0.35);
 
     // ✅ 若使用者問的是準備階段的問題，直接用 rule-based 回覆
@@ -143,10 +125,7 @@ async function handleSend() {
         );
         return; // ← 不讓 retriever 處理
     }
-    // getTopK(query, k=1, threshold=0.35)
-    // - We ask for the single best match to the user's question.
-    // - We only trust it if the score >= 0.35.
-    //   If too low, we treat it as "not confident enough".
+    // step 4: decide whether to use KB answer or fallback to rule-based logic
     if (kbHits && kbHits.length > 0) {
         // If the retriever found a strong enough match, we treat it as authoritative.
         const top = kbHits[0]; // best match { answer: "...", source: "...", ... }
@@ -167,7 +146,7 @@ async function handleSend() {
             // ✅ 立刻清空輸入框（最關鍵的地方！）
             userInput.value = "";
 
-            // 2. 產生並顯示 reasoning（這邊要 await 才不會出現 [object Promise]）
+            // 2. 產生並顯示 reasoning
             const reasoning = await generateReasoning(userText, top.answer);
             addMessage(
                 `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
@@ -187,10 +166,12 @@ async function handleSend() {
             // 1. 準備回覆內容並加上來源標籤
             const hasSourceInline = /Source:\s*/i.test(reply);
             const sourceLabel =
+                //這行是如果回覆裡已經有來源標籤，或是回覆是預設的「I can help with...」，就不加標籤；否則就加上「(AI reasoning)」標籤。
                 hasSourceInline || /I can help with/i.test(reply)
                     ? ""
                     : "(AI reasoning)";
             const aiReply = sourceLabel
+                //如果有來源標籤，就把它加在回覆後面，否則就直接用回覆內容。
                 ? `${reply} <div class="source">${sourceLabel}</div>`
                 : reply;
 
@@ -199,9 +180,11 @@ async function handleSend() {
 
             // 3. 產生並顯示 reasoning
             const reasoning = await generateReasoning(userText, reply);
+            //拆解 reasoning 成兩部分：解釋原因 和 建議下一步
             const [explanation, suggestion] = reasoning.split("💬");
 
             let formatted = `<div class="reasoning">🤖 <b>Reasoning:</b> ${explanation.trim()}</div>`;
+            //如果有建議下一步，就把它加在回覆後面
             if (suggestion) {
                 formatted += `<div class="next-action">💡 <b>Next Action:</b> ${suggestion.trim()}</div>`;
             }
@@ -216,7 +199,6 @@ async function handleSend() {
 
 // ---- 4. Wire events ----
 // We hook up UI events so that pressing the button or hitting Enter triggers handleSend().
-
 sendBtn.addEventListener("click", handleSend);
 // When user presses Enter in the text box, send the message instead of inserting a newline.
 userInput.addEventListener("keydown", (e) => {
@@ -226,9 +208,6 @@ userInput.addEventListener("keydown", (e) => {
 // ---- 5. Initial bot intro messages ----
 // When the page first loads, we want to greet the user and ALSO
 // immediately show the safety disclaimer.
-// This is critical: we say “I am not emergency services, call 000 if in danger.”
-// This sets correct expectations and is ethically important for crisis tools.
-
 console.log("🟦 Initialising intro messages...");
 knowledgeBase.intro.forEach((line) => {
     // Loop through each intro message (usually 2-3 lines)
@@ -248,16 +227,20 @@ console.log("🟩 Intro messages displayed successfully");
 // This design makes it easy to maintain or update content later without changing logic.
 
 try {
+    // Load from knowledgeBase.qna if available
     if (knowledgeBase?.qna?.length > 0) {
+        // Transform knowledgeBase.qna into retriever's expected format
         const entries = knowledgeBase.qna.map((it, i) => ({
             id: it.id ?? i,
             question:
+            //如果 it.keywords 是一個陣列 → 用 join(" ") 把裡面的字串合併成一句文字；否則 → 回傳空字串 ""。
                 it.question ??
                 (Array.isArray(it.keywords) ? it.keywords.join(" ") : ""),
             answer: it.answer ?? it.text ?? "",
             source: it.source ?? "knowledge_base",
         }));
-
+        
+        // Load into retriever
         retriever.loadKBFromObject({ entries });
         console.log(
             "📘 Retriever loaded from knowledge_base.qna:",
@@ -269,6 +252,7 @@ try {
     }
 } catch (e) {
     console.warn(
+        //無法載入知識庫時的錯誤處理
         "🔎 Failed to initialise retriever from knowledge_base.js:",
         e
     );
