@@ -3,7 +3,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 6px 4px 2px;
+  padding: 6px 4px 2px;/* 在輸入區上方 */
 }
 
 .suggestion-chip {
@@ -14,7 +14,6 @@
   padding: 6px 10px;
   font-size: 0.8rem;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.05s ease;
 }
 .suggestion-chip:hover {
   background: #e5e7eb;

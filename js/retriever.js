@@ -1,6 +1,7 @@
 // 🌐 Local Retriever (simplified version)
 // Loads Q&A directly from knowledge_base.js instead of external JSON.
 
+//建立全域變數 kb（knowledge base）和 loaded（是否已載入）。
 let kb = [];
 let loaded = false;
 
@@ -18,6 +19,7 @@ function normalize(data) {
 // --- Split text into lowercase tokens ---
 function tokenize(text) {
     if (!text) return [];
+    //這行會把文字轉成小寫，然後用正規表達式 \w+ 抓出所有的單字（字母、數字、底線組成的字串），最後回傳一個包含這些單字的陣列。如果沒有抓到任何單字，則回傳一個空陣列。
     return text.toLowerCase().match(/\w+/g) || [];
 }
 
@@ -52,6 +54,7 @@ function score(query, text) {
     const q = tokenize(query).filter((tok) => !stopwords.includes(tok));
     const t = tokenize(text).filter((tok) => !stopwords.includes(tok));
 
+    //任一方沒有詞，就沒有可比對內容，相似度 0。
     if (!q.length || !t.length) return 0;
 
     const set = new Set(t);

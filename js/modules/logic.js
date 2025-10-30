@@ -7,7 +7,8 @@ import { knowledgeBase } from "./knowledge_base.js";
 export function getReply(input) {
     const text = input.toLowerCase().trim();
 
-    // 🩵 During a disaster: prioritise safety and provide "during" guidance
+    // During a disaster: prioritise safety and provide "during" guidance
+
     if (
         (/during|right now|currently/.test(text) &&
             /(what\s+should|what\s+to\s+do|what\s+now|how\s+to|help|scared)/.test(
@@ -30,6 +31,7 @@ export function getReply(input) {
             /(what\s+should|what\s+to\s+do|what\s+now|how\s+to|clean\s*up)/.test(
                 text
             )) ||
+            //這裡的*是指中間可插入任意字元
         /(house|home).*(damaged|destroyed|unsafe|flooded)/.test(text)
     ) {
         return (
@@ -58,6 +60,8 @@ export function getReply(input) {
         return knowledgeBase.replies.before;
     }
 
+
+    //這行會檢查關鍵字 kw 裡，有沒有出現英文字母（A–Z, a–z）或數字（0–9）。如果有 → useBoundary = true 如果沒有 → useBoundary = false
     // 💬 General Q&A matches from the knowledge base
     for (const item of knowledgeBase.qna) {
         for (const kw of item.keywords) {

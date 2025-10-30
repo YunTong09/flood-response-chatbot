@@ -22,7 +22,7 @@
   padding: 10px;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
-  outline: none;
+  outline: none;/* 移除預設藍色邊框 */
   font-size: 0.9rem;
   color: var(--gray-text);
   margin-right: 4px;

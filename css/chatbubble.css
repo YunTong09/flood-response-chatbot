@@ -5,8 +5,8 @@
   line-height: 1.4;
   font-size: 0.9rem;
   max-width: 85%;
-  word-wrap: break-word;
-  white-space: pre-wrap;
+  word-wrap: break-word;/* 自動換行 */
+  white-space: pre-wrap;/* 保留使用者打的換行 */
 }
 
 /* 🤖 機器人訊息 */
