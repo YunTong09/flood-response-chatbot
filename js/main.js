@@ -61,7 +61,7 @@ async function handleSend() {
 
         // ❗ STOP HERE.
         // We do NOT continue to retriever.getTopK() and we do NOT call getReply() again.
-        
+
         return;
     }
 
@@ -80,14 +80,14 @@ async function handleSend() {
                 "bot"
             );
         }, 300);
-       
 
         return; // stop here so retriever won't override shortcut responses
     }
     // 🚨 manual override: skip retriever for evacuation/shelter-related questions
     if (
         /(should i leave|leave my (house|home|place|apartment)|do i need to leave|do we need to leave|should i evacuate|do i have to evacuate|is it safe to (stay|remain)|can i stay (home|here)|is it safe (here|to stay)|can i stay or should i go|water .* (get|gets|getting) in)/i.test(
-        userText)
+            userText
+        )
     ) {
         const reply = getReply(userText);
 
@@ -106,22 +106,29 @@ async function handleSend() {
     }
 
     // 💰 Financial / recovery-related questions should skip retriever
-if (/(financial|money|grant|fund|claim|insurance|apply.*help|apply.*support|apply.*assistance|compensation)/i.test(userText)) {
-    const reply =
-        "💰 <b>Financial and Recovery Assistance</b><br><br>" +
-        "If your home was damaged by the flood, you can apply for disaster recovery payments and grants from the Queensland Government.<br><br>" +
-        "👉 <a href='https://www.qld.gov.au/community/disasters-emergencies' target='_blank' rel='noopener noreferrer'>Queensland Disaster Assistance Portal</a><br><br>" +
-        "You may also contact your local council for community recovery services.<br><br>" +
-        "If you also feel stressed, you can reach Lifeline (13 11 14) for emotional support.";
+    if (
+        /(financial|money|grant|fund|claim|insurance|apply.*help|apply.*support|apply.*assistance|compensation)/i.test(
+            userText
+        )
+    ) {
+        const reply =
+            "💰 <b>Financial and Recovery Assistance</b><br><br>" +
+            "If your home was damaged by the flood, you can apply for disaster recovery payments and grants from the Queensland Government.<br><br>" +
+            "👉 <a href='https://www.qld.gov.au/community/disasters-emergencies' target='_blank' rel='noopener noreferrer'>Queensland Disaster Assistance Portal</a><br><br>" +
+            "You may also contact your local council for community recovery services.<br><br>" +
+            "If you also feel stressed, you can reach Lifeline (13 11 14) for emotional support.";
 
-    addMessage(reply, "bot");
+        addMessage(reply, "bot");
 
-    const reasoning = await generateReasoning(userText, reply);
-    addMessage(`<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`, "bot");
+        const reasoning = await generateReasoning(userText, reply);
+        addMessage(
+            `<div class="reasoning">🤖 Reasoning: ${reasoning}</div>`,
+            "bot"
+        );
 
-    userInput.value = "";
-    return; // ❗STOP retriever — only use this rule-based answer
-}
+        userInput.value = "";
+        return; // ❗STOP retriever — only use this rule-based answer
+    }
     const kbHits = await retriever.getTopK(userText, 1, 0.35);
 
     // ✅ 若使用者問的是準備階段的問題，直接用 rule-based 回覆
@@ -179,7 +186,10 @@ if (/(financial|money|grant|fund|claim|insurance|apply.*help|apply.*support|appl
         setTimeout(async () => {
             // 1. 準備回覆內容並加上來源標籤
             const hasSourceInline = /Source:\s*/i.test(reply);
-            const sourceLabel = hasSourceInline ? "" : "(AI reasoning)";
+            const sourceLabel =
+                hasSourceInline || /I can help with/i.test(reply)
+                    ? ""
+                    : "(AI reasoning)";
             const aiReply = sourceLabel
                 ? `${reply} <div class="source">${sourceLabel}</div>`
                 : reply;
